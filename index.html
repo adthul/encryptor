@@ -10,22 +10,23 @@
     <textarea id="message" rows="6" cols="60"></textarea>
     <br>
     <button id="encrypt">Lock Down</button>
+    <button id="decrypt">Unlock</button>
 
     <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
 
     <script>
       var encoder = {
         setMessage: function() {
-
+          this.message = document.getElementById('message').value
         },
         getPassword: function() {
-
+          this.password = prompt("Enter password");
         },
         setUrl: function() {
-
+          this.url = document.URL + "#" + this.encrypt();
         },
         replaceMessageWithUrl: function () {
-
+          document.getElementById('message').value = this.url
         },
         encrypt: function() {
           cypher = CryptoJS.AES.encrypt(this.message, this.password)
@@ -39,6 +40,13 @@
           this.setUrl()
           this.replaceMessageWithUrl()
         }
+      }
+      document.getElementById('encrypt').onclick = function() { encoder.protect(); }
+
+      document.getElementById('decrypt').onclick = function() {
+        var hash = window.location.hash.substring(1)
+        this.password = prompt("Enter password")
+        document.getElementById('message').value = CryptoJS.AES.decrypt(hash, this.password).toString(CryptoJS.enc.Utf8)
       }
     </script>
   </body>
